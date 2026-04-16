@@ -8,9 +8,17 @@ from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
 from pydantic import BaseModel
 
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+import os
+
+# Load SECRET_KEY from environment variable.
+# Generate a secure key with: openssl rand -hex 32
+# Never hard-code secrets in source code (CWE-522).
+SECRET_KEY = os.environ.get("SECRET_KEY", "")
+if not SECRET_KEY:
+    raise ValueError(
+        "SECRET_KEY environment variable is not set. "
+        "Generate a secure key with: openssl rand -hex 32"
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
